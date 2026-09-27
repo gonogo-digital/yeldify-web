@@ -1,13 +1,38 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { api } from '../api';
+
+const validarCPF = (cpf: string): boolean => {
+  const apenasNumeros = cpf.replace(/\D/g, '');
+  if (apenasNumeros.length !== 11) return false;
+  if (/^(\d)\1+$/.test(apenasNumeros)) return false;
+
+  let soma = 0;
+  for (let i = 0; i < 9; i++) {
+    soma += parseInt(apenasNumeros.charAt(i)) * (10 - i);
+  }
+  let resto = (soma * 10) % 11;
+  if (resto === 10 || resto === 11) resto = 0;
+  if (resto !== parseInt(apenasNumeros.charAt(9))) return false;
+
+  soma = 0;
+  for (let i = 0; i < 10; i++) {
+    soma += parseInt(apenasNumeros.charAt(i)) * (11 - i);
+  }
+  resto = (soma * 10) % 11;
+  if (resto === 10 || resto === 11) resto = 0;
+  if (resto !== parseInt(apenasNumeros.charAt(10))) return false;
+
+  return true;
+};
 
 export default function Identificacao() {
   const [cpf, setCpf] = useState('');
   const [, setStatus] = useState<'idle' | 'analyzing' | 'recognized' | 'new'>('idle');
   const [message, setMessage] = useState('');
+  const [cpfInvalido, setCpfInvalido] = useState(false);
+  const [verificando, setVerificando] = useState(false);
   const navigate = useNavigate();
-
-  const existingUsers = ['12345678901', '98765432109', '11144477735'];
 
   const formatarCPF = (valor: string): string => {
     const apenasNumeros = valor.replace(/\D/g, '');
@@ -22,36 +47,67 @@ export default function Identificacao() {
     if (apenasNumeros.length === 0) {
       setStatus('idle');
       setMessage('');
+      setCpfInvalido(false);
     } else if (apenasNumeros.length < 11) {
       setStatus('analyzing');
       setMessage('Analisando base com seguranca local...');
+      setCpfInvalido(false);
     } else if (apenasNumeros.length === 11) {
-      setStatus(existingUsers.includes(apenasNumeros) ? 'recognized' : 'new');
-      setMessage(existingUsers.includes(apenasNumeros) ? 'Usuario reconhecido...' : 'Novo usuario detectado...');
-      const timer = setTimeout(() => {
-        if (existingUsers.includes(apenasNumeros)) {
-          navigate('/senha', { state: { cpf: cpf } });
-        } else {
-          navigate('/onboarding', { state: { cpf: cpf, isNewUser: true } });
-        }
-      }, 1500);
-      return () => clearTimeout(timer);
+      const valido = validarCPF(apenasNumeros);
+      setCpfInvalido(!valido);
+      if (!valido) {
+        setStatus('idle');
+        setMessage('CPF invalido. Verifique os digitos.');
+      } else {
+        setVerificando(true);
+        setStatus('analyzing');
+        setMessage('Verificando CPF na base...');
+        api.verificarCpf(apenasNumeros)
+          .then((res) => {
+            setVerificando(false);
+            setStatus(res.existe ? 'recognized' : 'new');
+            setMessage(res.existe ? 'Usuario reconhecido...' : 'Novo usuario detectado...');
+            const timer = setTimeout(() => {
+              if (res.existe) {
+                navigate('/senha', { state: { cpf: cpf, userId: res.user_id } });
+              } else {
+                navigate('/onboarding', { state: { cpf: cpf, isNewUser: true } });
+              }
+            }, 1500);
+            return () => clearTimeout(timer);
+          })
+          .catch(() => {
+            setVerificando(false);
+            setCpfInvalido(true);
+            setStatus('idle');
+            setMessage('Erro ao verificar CPF. Tente novamente.');
+          });
+      }
     }
   }, [cpf, navigate]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const apenasNumeros = cpf.replace(/\D/g, '');
-    if (apenasNumeros.length === 11) {
-      if (existingUsers.includes(apenasNumeros)) {
-        navigate('/senha', { state: { cpf: cpf } });
-      } else {
-        navigate('/onboarding', { state: { cpf: cpf, isNewUser: true } });
-      }
+    if (apenasNumeros.length === 11 && validarCPF(apenasNumeros)) {
+      setVerificando(true);
+      api.verificarCpf(apenasNumeros)
+        .then((res) => {
+          if (res.existe) {
+            navigate('/senha', { state: { cpf: cpf, userId: res.user_id } });
+          } else {
+            navigate('/onboarding', { state: { cpf: cpf, isNewUser: true } });
+          }
+        })
+        .catch(() => {
+          setCpfInvalido(true);
+          setMessage('Erro ao verificar CPF. Tente novamente.');
+        })
+        .finally(() => setVerificando(false));
     }
   };
 
-  const isComplete = cpf.replace(/\D/g, '').length === 11;
+  const isComplete = cpf.replace(/\D/g, '').length === 11 && validarCPF(cpf.replace(/\D/g, ''));
 
   return (
     <div className="min-h-screen bg-[var(--bg-base)] flex items-center justify-center p-10" style={{ paddingBottom: '100px' }}>
@@ -80,12 +136,12 @@ export default function Identificacao() {
               placeholder="000.000.000-00"
               maxLength={14}
               className="auth-input"
-              style={{ textAlign: 'center', letterSpacing: '2px' }}
+              style={{ textAlign: 'center', letterSpacing: '2px', borderColor: cpfInvalido ? 'var(--alerta-vermelho)' : 'var(--linha-divisoria)' }}
             />
-            <div className="auth-feedback" style={{ minHeight: '24px' }}>{message}</div>
+            <div className="auth-feedback" style={{ minHeight: '24px', color: cpfInvalido ? 'var(--alerta-vermelho)' : 'var(--texto-mutado)' }}>{message}</div>
           </div>
-          <button type="submit" disabled={!isComplete} className="btn-primary-outline" style={{ width: '100%' }}>
-            {isComplete ? 'Continuar' : 'Digite seu CPF'}
+          <button type="submit" disabled={!isComplete || verificando} className="btn-primary-outline" style={{ width: '100%' }}>
+            {verificando ? 'Verificando...' : isComplete ? 'Continuar' : 'Digite seu CPF'}
           </button>
         </form>
 

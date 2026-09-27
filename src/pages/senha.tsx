@@ -10,6 +10,7 @@ export default function Senha() {
   const navigate = useNavigate();
   const location = useLocation();
   const cpf = (location.state as { cpf?: string })?.cpf || '';
+  const userId = (location.state as { userId?: string })?.userId || 'user-123';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,7 +22,7 @@ export default function Senha() {
       return;
     }
     try {
-      await login('user-123', cpf);
+      await login(userId, cpf);
       navigate('/dashboard/micro');
     } finally {
       setLoading(false);
