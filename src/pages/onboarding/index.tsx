@@ -85,31 +85,21 @@ export default function Onboarding() {
             <span className="diag-tag">03 / Proposta do Sistema</span>
             <h1 className="diag-title">O Yeldify estruturou estes tetos. O poder de aceite é seu.</h1>
             <p className="diag-description">
-              Com base no seu histórico de 3 meses, sugerimos travar estes limites para garantir estabilidade. Você pode desmarcar ou ajustar qualquer item antes de iniciar.
+              Com base no seu histórico de 3 meses, sugerimos travar estes limites para garantir estabilidade. Você pode revisar, desmarcar ou ajustar qualquer item na próxima etapa.
             </p>
             
-            <div className="proposal-list">
-              <div className="proposal-row">
-                <div className="proposal-info">
-                  <input type="checkbox" className="proposal-checkbox" checked readOnly />
-                  <span>Supermercado & Insumos</span>
-                </div>
-                <span className="proposal-val">R$ 800,00</span>
-              </div>
-              <div className="proposal-row">
-                <div className="proposal-info">
-                  <input type="checkbox" className="proposal-checkbox" checked readOnly />
-                  <span>Refeição & Restaurantes (iFood)</span>
-                </div>
-                <span className="proposal-val">R$ 500,00</span>
-              </div>
-              <div className="proposal-row">
-                <div className="proposal-info">
-                  <input type="checkbox" className="proposal-checkbox" checked readOnly />
-                  <span>Mobilidade & Transporte</span>
-                </div>
-                <span className="proposal-val">R$ 400,00</span>
-              </div>
+            <div style={{ textAlign: 'center', padding: '24px 0' }}>
+              <span style={{ 
+                display: 'inline-block', 
+                padding: '12px 24px', 
+                background: 'var(--bg-elevado)', 
+                border: '1px solid var(--linha-divisoria)',
+                borderRadius: '8px',
+                fontSize: '0.9rem',
+                color: 'var(--texto-principal)'
+              }}>
+                5 orçamentos sugeridos · Revisar e confirmar
+              </span>
             </div>
 
             <div className="diag-footer">
@@ -117,7 +107,7 @@ export default function Onboarding() {
                 ← Voltar
               </button>
               <button className="btn-primary-outline" onClick={() => navigate('/onboarding/orcamentos')}>
-                Aplicar Proposta e Iniciar
+                Ver e Aplicar Proposta
               </button>
             </div>
           </div>
