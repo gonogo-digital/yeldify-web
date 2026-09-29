@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useMockData } from '../hooks/useMockData';
 
 export default function Landing() {
   const navigate = useNavigate();
+  const { isUsuarioExistente, isUsuarioNovo } = useMockData();
   const [showAuthOverlay, setShowAuthOverlay] = useState(false);
   const [cpf, setCpf] = useState('');
   const [feedback, setFeedback] = useState('');
@@ -48,9 +50,15 @@ export default function Landing() {
   const handleCpfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const valor = formatarCPF(e.target.value);
     setCpf(valor);
-    
+
     if (valor.replace(/\D/g, '').length >= 11) {
-      setFeedback('✨ Usuário reconhecido. Redirecionando para autenticação fluida...');
+      if (isUsuarioExistente(valor)) {
+        setFeedback('Bem vindo de volta, vamos lá');
+      } else if (isUsuarioNovo(valor)) {
+        setFeedback('Vamos começar sua jornada do seu universo financeiro');
+      } else {
+        setFeedback('Vamos começar sua jornada do seu universo financeiro');
+      }
     } else {
       setFeedback('');
     }
