@@ -43,7 +43,7 @@ export default function Onboarding() {
 
             <div className="diag-footer">
               <span style={{ fontSize: '0.75rem', color: 'var(--texto-mutado)', fontFamily: 'var(--fonte-dados)' }}>
-                Passo 1 de 3
+                Passo 1 de 2
               </span>
               <button className="btn-text-link" onClick={() => irSlide(2)}>
                 Ver os acertos e vitórias
@@ -72,38 +72,6 @@ export default function Onboarding() {
 
             <div className="diag-footer">
               <button className="btn-text-link" onClick={() => irSlide(1)} style={{ rotate: '180deg' }}>
-                ← Voltar
-              </button>
-              <button className="btn-text-link" onClick={() => irSlide(3)}>
-                Ver proposta de orçamentos
-              </button>
-            </div>
-          </div>
-
-          {/* SLIDE 3: A PROPOSTA */}
-          <div className={`diag-slide ${activeSlide === 3 ? 'active' : ''}`} id="slide-3">
-            <span className="diag-tag">03 / Proposta do Sistema</span>
-            <h1 className="diag-title">O Yeldify estruturou estes tetos. O poder de aceite é seu.</h1>
-            <p className="diag-description">
-              Com base no seu histórico de 3 meses, sugerimos travar estes limites para garantir estabilidade. Você pode revisar, desmarcar ou ajustar qualquer item na próxima etapa.
-            </p>
-            
-            <div style={{ textAlign: 'center', padding: '24px 0' }}>
-              <span style={{ 
-                display: 'inline-block', 
-                padding: '12px 24px', 
-                background: 'var(--bg-elevado)', 
-                border: '1px solid var(--linha-divisoria)',
-                borderRadius: '8px',
-                fontSize: '0.9rem',
-                color: 'var(--texto-principal)'
-              }}>
-                5 orçamentos sugeridos · Revisar e confirmar
-              </span>
-            </div>
-
-            <div className="diag-footer">
-              <button className="btn-text-link" onClick={() => irSlide(2)} style={{ rotate: '180deg' }}>
                 ← Voltar
               </button>
               <button className="btn-primary-outline" onClick={() => navigate('/onboarding/orcamentos')}>
