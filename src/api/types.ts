@@ -132,3 +132,8 @@ export interface ListarOrcamentosParams {
   page?: number;
   page_size?: number;
 }
+
+export interface VerificarCpfResponse {
+  existe: boolean;
+  user_id?: string;
+}

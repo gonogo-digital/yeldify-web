@@ -12,12 +12,17 @@ import type {
   Token,
   Transacao,
   TransacaoList,
+  VerificarCpfResponse,
 } from './types';
 
 export const api = {
   // ===== Auth
   async login(userId: string): Promise<Token> {
     return http.post<Token>('/auth/token', { user_id: userId }, {});
+  },
+
+  async verificarCpf(cpf: string): Promise<VerificarCpfResponse> {
+    return http.get<VerificarCpfResponse>('/auth/verificar-cpf', { cpf });
   },
 
   // ===== Transações
@@ -58,4 +63,5 @@ export type {
   Transacao,
   TransacaoList,
   TipoLancamento,
+  VerificarCpfResponse,
 } from './types';

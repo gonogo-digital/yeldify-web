@@ -43,7 +43,7 @@ export default function Onboarding() {
 
             <div className="diag-footer">
               <span style={{ fontSize: '0.75rem', color: 'var(--texto-mutado)', fontFamily: 'var(--fonte-dados)' }}>
-                Passo 1 de 3
+                Passo 1 de 2
               </span>
               <button className="btn-text-link" onClick={() => irSlide(2)}>
                 Ver os acertos e vitórias
@@ -74,50 +74,8 @@ export default function Onboarding() {
               <button className="btn-text-link" onClick={() => irSlide(1)} style={{ rotate: '180deg' }}>
                 ← Voltar
               </button>
-              <button className="btn-text-link" onClick={() => irSlide(3)}>
-                Ver proposta de orçamentos
-              </button>
-            </div>
-          </div>
-
-          {/* SLIDE 3: A PROPOSTA */}
-          <div className={`diag-slide ${activeSlide === 3 ? 'active' : ''}`} id="slide-3">
-            <span className="diag-tag">03 / Proposta do Sistema</span>
-            <h1 className="diag-title">O Yeldify estruturou estes tetos. O poder de aceite é seu.</h1>
-            <p className="diag-description">
-              Com base no seu histórico de 3 meses, sugerimos travar estes limites para garantir estabilidade. Você pode desmarcar ou ajustar qualquer item antes de iniciar.
-            </p>
-            
-            <div className="proposal-list">
-              <div className="proposal-row">
-                <div className="proposal-info">
-                  <input type="checkbox" className="proposal-checkbox" checked readOnly />
-                  <span>Supermercado & Insumos</span>
-                </div>
-                <span className="proposal-val">R$ 800,00</span>
-              </div>
-              <div className="proposal-row">
-                <div className="proposal-info">
-                  <input type="checkbox" className="proposal-checkbox" checked readOnly />
-                  <span>Refeição & Restaurantes (iFood)</span>
-                </div>
-                <span className="proposal-val">R$ 500,00</span>
-              </div>
-              <div className="proposal-row">
-                <div className="proposal-info">
-                  <input type="checkbox" className="proposal-checkbox" checked readOnly />
-                  <span>Mobilidade & Transporte</span>
-                </div>
-                <span className="proposal-val">R$ 400,00</span>
-              </div>
-            </div>
-
-            <div className="diag-footer">
-              <button className="btn-text-link" onClick={() => irSlide(2)} style={{ rotate: '180deg' }}>
-                ← Voltar
-              </button>
               <button className="btn-primary-outline" onClick={() => navigate('/onboarding/orcamentos')}>
-                Aplicar Proposta e Iniciar
+                Ver e Aplicar Proposta
               </button>
             </div>
           </div>
